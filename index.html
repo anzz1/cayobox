@@ -417,8 +417,7 @@ var imageArr = [];
 var imageCount = 0;
 var imageLoadCount = 0;
 
-function preloadImage(url)
-{
+function preloadImage(url) {
   if (typeof(Image) === "function") {
     imageArr[imageCount]=new Image();
     imageArr[imageCount].onerror = function(){console.error("ERROR: preloadImage('"+url+"')");};
@@ -456,8 +455,7 @@ for (var i = 0; i < 6; i++) {
 var audioLoadArr = [];
 var audioLoadCount = 0;
 
-function preloadAudio(url)
-{
+function preloadAudio(url) {
   if (typeof(Audio) === "function") {
     audioLoadArr[audioLoadCount]=new Audio();
     audioLoadArr[audioLoadCount].preload="auto";
