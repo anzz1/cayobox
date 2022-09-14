@@ -148,12 +148,12 @@ body {
     <div class="multiplier" id="m0" onClick="chMulti(this, 0);"></div>
     <div class="multiplier" id="m1" onClick="chMulti(this, 1);"></div>
     <div class="multiplier" id="m2" onClick="chMulti(this, 2);"></div>
-    <div class="numero" id="n0" onClick="chFocus(3, true);"></div>
-    <div class="numero" id="n1" onClick="chFocus(4, true);"></div>
-    <div class="numero" id="n2" onClick="chFocus(5, true);"></div>
-    <div class="tar" id="t0" onClick="chFocus(0, true);"></div>
-    <div class="tar" id="t1" onClick="chFocus(1, true);"></div>
-    <div class="tar" id="t2" onClick="chFocus(2, true);"></div>
+    <div class="numero" id="n0" onClick="clickIt(3);"></div>
+    <div class="numero" id="n1" onClick="clickIt(4);"></div>
+    <div class="numero" id="n2" onClick="clickIt(5);"></div>
+    <div class="tar" id="t0" onClick="clickIt(0);"></div>
+    <div class="tar" id="t1" onClick="clickIt(1);"></div>
+    <div class="tar" id="t2" onClick="clickIt(2);"></div>
     <div class="err" id="e0"></div>
     <div class="err" id="e1"></div>
     <div class="err" id="e2"></div>
@@ -169,6 +169,8 @@ var g_focus = 0;
 var g_sound = true;
 var g_loaded = false;
 
+var g_isTouchDevice = ('ontouchstart' in document.documentElement);
+
 var g_combos = [
   [0,0,1,1,2,2], // 1-1, 2-2, 3-3
   [0,0,1,2,2,1], // 1-1, 2-3, 3-2
@@ -178,7 +180,25 @@ var g_combos = [
   [0,2,1,0,2,1], // 1-3, 2-1, 3-2
 ];
 
-function chFocus(n, isclick) {
+function clickIt(n) {
+  if (g_isTouchDevice && g_focus == n) {
+    if (n < 3) {
+      var val = g_tar[n]+1;
+      chTar(n, (val >= 0 && val < 10) ? val : 0);
+      playSnd("blip");
+      return;
+    } else if (n < 6) {
+      var val = g_num[n-3]+1;
+      chNum(n-3, (val > 0 && val < 10) ? val : 1);
+      playSnd("blip");
+      return;
+    }
+  }
+  chFocus(n);
+  playSnd("click");
+}
+
+function chFocus(n) {
   g_focus = n;
   var hi = document.getElementById('hi');
   switch (n) {
@@ -215,9 +235,6 @@ function chFocus(n, isclick) {
     default:
       hi.style.display = 'none';
   }
-  if (isclick) {
-    playSnd("click");
-  }
 }
 
 function getElem(n) {
@@ -249,7 +266,7 @@ function resetBox() {
   g_multi = [1,1,1];
   g_num = [-1,-1,-1];
   g_tar = [-1,-1,-1];
-  chFocus(0, false);
+  chFocus(0);
 
   for (var i = 0; i < 6; i++) {
     getElem(i).style.backgroundImage = "";
@@ -366,7 +383,7 @@ function solveBox() {
     playSnd("oof");
   } else {
     showErr(2+res);
-    chFocus(6, false);
+    chFocus(6);
     console.log("Solve Success: "+(g_combos[res][0]+1)+"-"+(g_combos[res][1]+1)+" "+
         (g_combos[res][2]+1)+"-"+(g_combos[res][3]+1)+" "+(g_combos[res][4]+1)+"-"+(g_combos[res][5]+1));
     playSnd("mlem");
@@ -452,12 +469,12 @@ window.addEventListener("keydown", function (event) {
       var k = Number(event.key);
       if (g_focus < 3) {
         chTar(g_focus, k);
-        chFocus(g_focus+1, false);
+        chFocus(g_focus+1);
         playSnd("blip");
       } else if (g_focus < 6) {
         if (k != 0) {
           chNum(g_focus-3, k);
-          chFocus(g_focus+1, false);
+          chFocus(g_focus+1);
           playSnd("blip");
         }
       }
@@ -485,7 +502,7 @@ window.addEventListener("keydown", function (event) {
         }
       }
       if (g_focus > 0) {
-        chFocus(g_focus - 1, false);
+        chFocus(g_focus-1);
       }
       playSnd("swish");
       break;
@@ -501,35 +518,35 @@ window.addEventListener("keydown", function (event) {
       break;
     case "ArrowLeft":
       if (g_focus > 0) {
-        chFocus(g_focus-1, true);
+        clickIt(g_focus-1);
       } else {
-        chFocus(5, true);
+        clickIt(5);
       }
       break;
     case "Tab":
     case "ArrowRight":
       if (g_focus > 4) {
-        chFocus(0, true);
+        clickIt(0);
       } else {
-        chFocus(g_focus+1, true);
+        clickIt(g_focus+1);
       }
       break;
     case "ArrowUp":
       if (g_focus > 3) {
-        chFocus(g_focus-1, true);
+        clickIt(g_focus-1);
       } else if (g_focus == 3) {
-        chFocus(0, true);
+        clickIt(0);
       } else {
-        chFocus(5, true);
+        clickIt(5);
       }
       break;
     case "ArrowDown":
       if (g_focus > 4) {
-        chFocus(0, true);
+        clickIt(0);
       } else if (g_focus > 2) {
-        chFocus(g_focus+1, true);
+        clickIt(g_focus+1);
       } else {
-        chFocus(3, true);
+        clickIt(3);
       }
       break;
     default:
