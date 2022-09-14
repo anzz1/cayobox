@@ -415,6 +415,7 @@ function playSnd(snd) {
 
 var imageArr = [];
 var imageCount = 0;
+var imageLoadCount = 0;
 
 function preloadImage(url)
 {
@@ -422,12 +423,13 @@ function preloadImage(url)
     imageArr[imageCount]=new Image();
     imageArr[imageCount].onerror = function(){console.error("ERROR: preloadImage('"+url+"')");};
     imageArr[imageCount].onload = function(){
-      imageCount++;
-      if (imageCount == 36) {
+      imageLoadCount++;
+      if (imageLoadCount == 36) {
         onpreloadcomplete();
       }
     };
     imageArr[imageCount].src=url;
+    imageCount++;
   } else {
     console.error("ERROR: Image() is not a function");
   }
@@ -450,6 +452,26 @@ for (var i = 0; i < 10; i++) {
 for (var i = 0; i < 6; i++) {
   preloadImage('img/res'+i+'.png');
 }
+
+var audioLoadArr = [];
+var audioLoadCount = 0;
+
+function preloadAudio(url)
+{
+  if (typeof(Audio) === "function") {
+    audioLoadArr[audioCount]=new Audio();
+    audioLoadArr[audioCount].preload="auto";
+    audioLoadArr[audioCount].src=url;
+    audioLoadCount++;
+  }
+}
+preloadAudio('snd/blip.mp3');
+preloadAudio('snd/click.mp3');
+preloadAudio('snd/mlem.mp3');
+preloadAudio('snd/moo.mp3');
+preloadAudio('snd/oof.mp3');
+preloadAudio('snd/swish.mp3');
+preloadAudio('snd/thump.mp3');
 
 window.addEventListener("keydown", function (event) {
   if (event.defaultPrevented || !g_loaded) {
