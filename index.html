@@ -459,9 +459,9 @@ var audioLoadCount = 0;
 function preloadAudio(url)
 {
   if (typeof(Audio) === "function") {
-    audioLoadArr[audioCount]=new Audio();
-    audioLoadArr[audioCount].preload="auto";
-    audioLoadArr[audioCount].src=url;
+    audioLoadArr[audioLoadCount]=new Audio();
+    audioLoadArr[audioLoadCount].preload="auto";
+    audioLoadArr[audioLoadCount].src=url;
     audioLoadCount++;
   }
 }
