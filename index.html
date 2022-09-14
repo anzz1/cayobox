@@ -549,7 +549,7 @@ function onpreloadcomplete() {
   document.getElementById('loadink').style.display = 'none';
   document.getElementById('codebox').style.display = 'block';
   g_loaded = true;
-  maxWidth  = outer.clientWidth,
+  maxWidth  = outer.clientWidth;
   maxHeight = outer.clientHeight;
   resize();
 }
@@ -558,7 +558,7 @@ function resize() {
   if (!g_loaded) {
     return;
   }
-  let scale, width = window.innerWidth, height = window.innerHeight,
+  var scale, width = window.innerWidth, height = window.innerHeight,
       isMax = width >= maxWidth && height >= maxHeight;
 
   scale = Math.min(width/maxWidth, height/maxHeight);
